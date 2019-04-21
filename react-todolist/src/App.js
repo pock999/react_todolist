@@ -1,69 +1,88 @@
 import React, { Component } from 'react';
 import './App.css';
 
-class TodoItem extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {todoList:[]};
-    this.add = this.add();
-  }
-  add(todo){
-    this.state.todoList.push({todo:false});
-  }
-  render() {
-    if(this.state.todoList.length===0){
-      return (
-        <div>無待辦事項
-          <AddItem todolist={this.state.todoList} />
-        </div>
-      );
-    }else{
-      return (
-        <div>待辦清單
-          <AddItem todolist={this.state.todoList} />
-        </div>
-      );
-    }
-  }
-}
-class AddItem extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {value: ''};
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
-  handleSubmit(event) {
-    let todo = this.state.value;
-    alert('新增事項 ' + todo);
-    event.preventDefault();
-    // this.props.addlist(this.state.value);
-    this.props.todoList.push({todo:false});
-    // this.props.todolist.push({todo:false});
-    alert(this.props.todolist);
-    event.preventDefault();
-  }
+// const List = ({ list, onDelete }) => (
+//   <ul>
+//     {list.map((item, idx) => (
+//       <li>
+//         {item} ---
+//         <span className="delete" onClick={() => onDelete(idx)}>
+//           delete
+//         </span>
+//       </li>
+//     ))}
+//   </ul>
+// );
+class List extends React.Component {
   render(){
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          事項:
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="button" value="新增" onClick={this.handleSubmit}/>
-      </form>
+      <ul>
+        {/* this.props 為其他地方使用List組件時候，所傳進來的參數 */}
+     {this.props.list.map((item, idx) => (
+       <li>
+         {idx} : {item} ---
+         <span className="delete" onClick={() => this.props.onDelete(idx)}>
+           delete
+         </span>
+       </li>
+     ))}
+   </ul>
+    );
+  }
+}
+class Todo extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      input: "",
+      list: ["WO4", "gta4", "nuxt"]
+    };
+
+    this.handleInput = this.handleInput.bind(this);
+    this.addTodo = this.addTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
+  }
+
+  handleInput(event) {
+    //使input內的值可以被更改 
+    this.setState({ input: event.target.value });
+  }
+  addTodo() {
+    // 語法:updatedList = [...原先的ary,新增的值]
+    const updatedList = [...this.state.list, this.state.input];
+    // 更新state的方式 ==> this.setState({屬性一:更新的屬性值,屬性二:更新的屬性值});
+    this.setState({ list: updatedList, input: "" });
+  }
+  deleteTodo(idx) {
+    // 這裡的意思是只留下index不等於傳進來要刪除的idx的項目，也就是過濾掉idx的項目
+    const filter = (item, index) => index !== idx;
+    const updatedList = this.state.list.filter(filter);
+    // 也能寫成==>const updatedList = this.state.list.filter((item, index) => index !== idx);
+    this.setState({ list: updatedList });
+  }
+
+  render() {
+    const { input, list } = this.state;
+
+    return (
+      <div>
+        {/* 使input內的值可以被更改，因為這裡的value原先已經固定給state的屬性，在這裡使期變成雙向繫結*/}
+        <input value={input} onChange={this.handleInput} />
+
+        <button onClick={this.addTodo}>add</button>
+        {/* 在List 內可以使用this.props.list呼叫到list，使用this.props.onDelet可以呼叫到deleteTodo */}
+        <List list={list} onDelete={this.deleteTodo} />
+      </div>
     );
   }
 }
 
-class App extends Component {
+
+class App extends React.Component {
   render() {
     return (
       <div className="todoList">
-        <TodoItem />
+        <Todo/>
       </div>
     );
   }
