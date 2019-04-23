@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
-
+function TodoThing(thing, fulfill) {
+  this.thing = thing;
+  this.fulfill = fulfill;
+}
+function finishClass(fulfill){
+  if(fulfill){
+    return 'done';
+  }else{
+    return '';
+  }
+}
 // const List = ({ list, onDelete }) => (
 //   <ul>
 //     {list.map((item, idx) => (
@@ -20,7 +30,11 @@ class List extends React.Component {
         {/* this.props 為其他地方使用List組件時候，所傳進來的參數 */}
      {this.props.list.map((item, idx) => (
        <li>
-         {idx} : {item} ---
+         
+         <span className={finishClass(item.fulfill)} onClick={() => this.props.finishTodo(idx)}>
+        
+              {idx} : {item.thing}
+         </span>
          <span className="delete" onClick={() => this.props.onDelete(idx)}>
            delete
          </span>
@@ -35,21 +49,28 @@ class Todo extends React.Component {
     super();
     this.state = {
       input: "",
-      list: ["WO4", "gta4", "nuxt"]
+      list: [{thing:"WO4",fulfill:false}, {thing:"gta4",fulfill:false}, {thing:"nuxt",fulfill:false}]
     };
 
     this.handleInput = this.handleInput.bind(this);
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.finishTodo = this.finishTodo.bind(this);
   }
-
+  finishTodo(idx){
+    const filter = (item, index) => index !== idx;
+    let thingList = Object.assign({}, this.state.list); 
+    thingList[idx].fulfill = true;
+    this.setState({list:thingList});
+  }
   handleInput(event) {
     //使input內的值可以被更改 
     this.setState({ input: event.target.value });
   }
   addTodo() {
     // 語法:updatedList = [...原先的ary,新增的值]
-    const updatedList = [...this.state.list, this.state.input];
+    // const updatedList = [...this.state.list, this.state.input];
+    const updatedList = [...this.state.list, new TodoThing(this.state.input,false)];
     // 更新state的方式 ==> this.setState({屬性一:更新的屬性值,屬性二:更新的屬性值});
     this.setState({ list: updatedList, input: "" });
   }
