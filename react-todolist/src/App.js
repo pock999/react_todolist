@@ -8,7 +8,7 @@ function finishClass(fulfill){
   if(fulfill){
     return 'done';
   }else{
-    return '';
+    return 'todo';
   }
 }
 // const List = ({ list, onDelete }) => (
@@ -28,13 +28,13 @@ class List extends React.Component {
     return (
       <ul>
         {/* this.props 為其他地方使用List組件時候，所傳進來的參數 */}
-     {this.props.list.map((item, idx) => (
+      {this.props.list.map((item, idx) => (
        <li>
-         
-         <span className={finishClass(item.fulfill)} onClick={() => this.props.finishTodo(idx)}>
-        
-              {idx} : {item.thing}
+         {idx} : {item.thing}-->
+         <span className={finishClass(item.fulfill)} onClick={() => this.props.onFinish(idx)}>
+              finish
          </span>
+         --/--           
          <span className="delete" onClick={() => this.props.onDelete(idx)}>
            delete
          </span>
@@ -49,7 +49,7 @@ class Todo extends React.Component {
     super();
     this.state = {
       input: "",
-      list: [{thing:"WO4",fulfill:false}, {thing:"gta4",fulfill:false}, {thing:"nuxt",fulfill:false}]
+      list: [{thing:"吃飯",fulfill:false}, {thing:"睡覺",fulfill:false}, {thing:"打東東",fulfill:false}]
     };
 
     this.handleInput = this.handleInput.bind(this);
@@ -58,10 +58,11 @@ class Todo extends React.Component {
     this.finishTodo = this.finishTodo.bind(this);
   }
   finishTodo(idx){
-    const filter = (item, index) => index !== idx;
-    let thingList = Object.assign({}, this.state.list); 
-    thingList[idx].fulfill = true;
-    this.setState({list:thingList});
+    let finishCopy = this.state.list;
+    console.log("finishCopy=>",finishCopy)
+    finishCopy[idx].fulfill=!finishCopy[idx].fulfill
+    this.setState({ list:finishCopy });
+    
   }
   handleInput(event) {
     //使input內的值可以被更改 
@@ -92,7 +93,7 @@ class Todo extends React.Component {
 
         <button onClick={this.addTodo}>add</button>
         {/* 在List 內可以使用this.props.list呼叫到list，使用this.props.onDelet可以呼叫到deleteTodo */}
-        <List list={list} onDelete={this.deleteTodo} />
+        <List list={list} onDelete={this.deleteTodo} onFinish={this.finishTodo}/>
       </div>
     );
   }
