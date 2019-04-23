@@ -30,11 +30,11 @@ class List extends React.Component {
         {/* this.props 為其他地方使用List組件時候，所傳進來的參數 */}
       {this.props.list.map((item, idx) => (
        <li>
-         {idx} : {item.thing}-->
+         
          <span className={finishClass(item.fulfill)} onClick={() => this.props.onFinish(idx)}>
-              finish
+          {idx} : {item.thing}
          </span>
-         --/--           
+         -->          
          <span className="delete" onClick={() => this.props.onDelete(idx)}>
            delete
          </span>
@@ -56,6 +56,13 @@ class Todo extends React.Component {
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.finishTodo = this.finishTodo.bind(this);
+    this.keyPress = this.keyPress.bind(this);
+  }
+  keyPress(event){
+    console.log(event.keyCode);
+    if(event.keyCode == 13){
+      this.addTodo();
+    }
   }
   finishTodo(idx){
     let finishCopy = this.state.list;
@@ -89,7 +96,7 @@ class Todo extends React.Component {
     return (
       <div>
         {/* 使input內的值可以被更改，因為這裡的value原先已經固定給state的屬性，在這裡使期變成雙向繫結*/}
-        <input value={input} onChange={this.handleInput} />
+        <input value={input} onChange={this.handleInput} onKeyDown={this.keyPress}/>
 
         <button onClick={this.addTodo}>add</button>
         {/* 在List 內可以使用this.props.list呼叫到list，使用this.props.onDelet可以呼叫到deleteTodo */}
