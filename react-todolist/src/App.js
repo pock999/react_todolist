@@ -77,7 +77,7 @@ class Todo extends React.Component {
   }
   deleteTodo(idx) {
     // 這裡的意思是只留下index不等於傳進來要刪除的idx的項目，也就是過濾掉idx的項目
-    const filter = (item, index) => index !== idx;
+    const filter = (  item, index) => index !== idx;
     const updatedList = this.state.list.filter(filter);
     // 也能寫成==>const updatedList = this.state.list.filter((item, index) => index !== idx);
     this.setState({ list: updatedList });
