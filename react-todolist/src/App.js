@@ -11,18 +11,6 @@ function finishClass(fulfill){
     return 'todo';
   }
 }
-// const List = ({ list, onDelete }) => (
-//   <ul>
-//     {list.map((item, idx) => (
-//       <li>
-//         {item} ---
-//         <span className="delete" onClick={() => onDelete(idx)}>
-//           delete
-//         </span>
-//       </li>
-//     ))}
-//   </ul>
-// );
 class List extends React.Component {
   render(){
     return (
@@ -64,14 +52,12 @@ class Todo extends React.Component {
     this.setState({ list: updatedList , input: ""});
   }
   keyPress(event){
-    console.log(event.keyCode);
     if(event.keyCode == 13){
       this.addTodo();
     }
   }
   finishTodo(idx){
     let finishCopy = this.state.list;
-    console.log("finishCopy=>",finishCopy)
     finishCopy[idx].fulfill=!finishCopy[idx].fulfill
     this.setState({ list:finishCopy });
     
